@@ -39,9 +39,14 @@ src/A-data/2-processed/2-1-wav16k/*/
 # -------------------------
 # Work caches + Models (rebuildable; HuggingFace + SpeechBrain model cache)
 # -------------------------
-src/B-work/*/
-# Keeps folder names within /B-work/ but removes all content
-src/C-models/
+src/B-work/**
+!src/B-work/*/
+!src/B-work/*/.gitkeep
+# Ignore contents of B-work, but keep subfolder names
+src/C-models/**
+!src/C-models/
+!src/C-models/.gitkeep
+# Ignore contents of C-models, but keep folder
 
 
 # -------------------------
@@ -49,7 +54,11 @@ src/C-models/
 # -------------------------
 # (Keep these if they’re small & useful; ignore heavy raw artifacts)
 *.log
-src/D-reports/
+src/D-reports/**
+!src/D-reports/
+!src/D-reports/.gitkeep
+# Ignore contents of D-reports, but keep folder
+
 
 # -------------------------
 # Python / Jupyter cruft
