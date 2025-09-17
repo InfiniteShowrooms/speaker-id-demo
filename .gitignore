@@ -15,7 +15,9 @@ venv/
 # Raw data
 # -------------------------
 # Ignore public datasets (too big + license issues)
-src/A-data/1-raw/1-1-datasets/
+src/A-data/1-raw/1-1-datasets/**
+!src/A-data/1-raw/1-1-datasets/*/
+!src/A-data/1-raw/1-1-datasets/*/.gitkeep
 # Keep these (actual recordings for test reproducibility):
 # A-data/1-raw/1-2-speaker-enroll/
 # A-data/1-raw/1-3-client-meetings/
