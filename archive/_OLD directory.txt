@@ -1,0 +1,148 @@
+A-data/
+  1-raw/                           # untouched downloads (leave original Kaggle/CommonVoice/etc. here)
+    kaggle50/...                 # raw dataset as downloaded
+    celebs7/...                  # raw dataset as downloaded
+    AMI/...                      # (optional) diarization benchmark dataset
+    ...
+  
+  2-processed/                     # cleaned & normalized data (what training/embedding uses)
+    wav16k/                      # all audio converted → mono, 16 kHz, PCM16
+      kaggle50/                  # normalized subset of kaggle50
+        k50_spk01/...            # all clips for this speaker
+        k50_spk02/...
+        ...
+      celebs7/                   # normalized subset of celebs7
+        c7_obama/...             # clips for Obama
+        c7_beyonce/...           # clips for Beyoncé
+        ...
+      ...
+    manifests/                   # CSVs describing dataset splits (your “table”)
+      all.csv                    # every clip (path,label,duration_s)
+      split.csv                  # stratified assignment: train/val/test per clip
+      ...
+  
+B-work/                            # intermediate artifacts (cached, reproducible)
+  ecapa_embeds/                  # ECAPA-TDNN embeddings for each clip
+    npy/                         # one .npy per clip (cached so you don’t recompute)
+    index.csv                    # manifest: npy,label,split
+  enroll/                        # embeddings for enrollment speakers (averaged per person)
+    ecapa_means.json             # JSON mapping speaker → mean embedding vector
+  outputs/                       # results from inference/diarization
+    meeting_assignments.json      # diarization + named speakers (per meeting file)
+    meeting_assignments.tsv       # same in tabular form
+    ...
+  
+C-models/                          # trained ML models + encoders
+  logreg_ecapa.pkl               # scikit-learn model (LogReg/SVM/etc.)
+  label_encoder.joblib           # maps integer IDs ↔ speaker names
+  scaler.joblib                  # StandardScaler for embeddings
+  ...
+  
+D-reports/                         # evaluation artifacts for your presentation
+  train_report.txt               # metrics from training split
+  val_report.txt                 # metrics from validation split
+  test_report.txt                # metrics from test split
+  val_confusion_matrix.png       # confusion matrix figure
+  test_confusion_matrix.png
+  ...
+  
+X-scripts/                         # Python scripts you run
+  normalize_and_stage.py         # convert raw audio → processed/wav16k
+  build_manifest.py              # build all.csv from wav16k folders
+  make_splits.py                 # generate split.csv
+  embed_from_manifest.py         # compute ECAPA embeddings per clip
+  train_eval_classifier.py       # train LogReg/SVM, output reports & model
+  predict_folder.py              # sanity-check predictions on new wavs
+  name_diarized.py               # assign names to diarized clusters using enrollment
+  ...
+
+
+🔄 How it all fits together:
+1. data/raw → download & park everything here. Never modify.
+2. scripts/normalize_and_stage.py → converts audio → data/processed/wav16k/ with clean structure.
+3. scripts/build_manifest.py → scans wav16k → builds all.csv.
+4. scripts/make_splits.py → creates split.csv (train/val/test).
+5. scripts/embed_from_manifest.py → reads manifests, extracts embeddings → work/ecapa_embeds/.
+6. scripts/train_eval_classifier.py → trains model → saves to models/, reports to reports/.
+7. scripts/predict_folder.py → quick sanity-check on new wavs.
+8. scripts/name_diarized.py → uses pyannote diarization + trained classifier + enrollment → saves named meeting results → work/outputs/.
+
+👉 This way:
+* data/ = source of truth (raw + processed tables/audio).
+* work/ = heavy caches (you can delete/rebuild if needed).
+* models/ = trained ML deliverables.
+* reports/ = things you show in class.
+* scripts/ = reproducible pipeline.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================================
+====OLD VERSIONS BELOW=====================
+===========================================
+
+project/
+  data/
+    raw/
+        kaggle50/ ...as downloaded...
+        celebs7/  ...as downloaded...
+    processed/
+        wav16k/
+        kaggle50/<speaker>/clip_XXXX.wav
+        celebs7/<speaker>/clip_YYYY.wav
+        manifests/
+        all.csv          # path,label,duration_s
+        split.csv        # path,split
+  work/
+    wav16k/            # normalized mono 16k PCM
+    manifests/
+    ecapa_embeds/
+    models/
+
+
+
+=======
+speaker-id-demo/
+│
+├─ .venv/                # Python virtual environment (auto-created)
+├─ data/
+│   ├─ enroll/           # 30–60s per speaker for enrollment
+│   ├─ meetings/         # test/demo multi-speaker recordings
+│   ├─ datasets/         # larger datasets (e.g., VCTK, AMI, Kaggle downloads)
+│   │    ├─ vctk/
+│   │    ├─ ami/
+│   │    └─ kaggle50/
+│   └─ transcripts/      # optional transcripts or RTTM files
+│
+├─ embeddings/           # auto-saved .npz voiceprints
+├─ outputs/              # diarization + ID results (JSON, SRT, CSV)
+│
+├─ enroll.py             # script to enroll known speakers
+├─ identify.py           # script to run diarization + ID
+├─ train_classifier.py   # script for supervised training/eval on labeled dataset
+├─ requirements.txt
+└─ README.md
+
+===
+
+data/enroll = short reference clips you record yourself.
+
+data/meetings = real or synthetic multi-speaker audios for demo.
+
+data/datasets = where you dump Kaggle or AMI/VCTK data for proper ML training.
+
+embeddings/ = where your enrolled .npz voiceprints live.
+
+outputs/ = results like diarized JSON or transcripts.

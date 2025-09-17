@@ -1,0 +1,68 @@
+# -------------------------
+# Virtual environments
+# -------------------------
+.venv/
+venv/
+
+
+# -------------------------
+# Local secrets / environment variables
+# -------------------------
+.env
+
+
+# -------------------------
+# Raw data
+# -------------------------
+# Ignore public datasets (too big + license issues)
+src/A-data/1-raw/1-1-datasets/
+# Keep these (actual recordings for test reproducibility):
+# A-data/1-raw/1-2-speaker-enroll/
+# A-data/1-raw/1-3-client-meetings/
+
+
+# -------------------------
+# Processed audio (can be rebuilt)
+# -------------------------
+src/A-data/2-processed/2-1-wav16k/*/
+# Keeps folder names within /2-1-wav16k/ but removes all content
+!A-data/2-processed/2-2-manifests/*.csv
+# Keep manifests (CSV tables are small + important)
+
+
+# -------------------------
+# Numpy dumps (re-derivable embeddings, etc.)
+# -------------------------
+*.npy
+
+
+# -------------------------
+# Work caches + Models (rebuildable; HuggingFace + SpeechBrain model cache)
+# -------------------------
+src/B-work/*/
+# Keeps folder names within /B-work/ but removes all content
+src/C-models/
+
+
+# -------------------------
+# Reports
+# -------------------------
+# (Keep these if they’re small & useful; ignore heavy raw artifacts)
+*.log
+src/D-reports/
+
+# -------------------------
+# Python / Jupyter cruft
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+
+# -------------------------
+# OS cruft
+# -------------------------
+.DS_Store
+Thumbs.db

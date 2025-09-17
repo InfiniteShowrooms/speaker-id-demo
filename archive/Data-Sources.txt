@@ -1,0 +1,2 @@
+1. 50 unique speakers, 60min for each (mono, 16khz, split to 1min chunks): https://www.kaggle.com/datasets/vjcalling/speaker-recognition-audio-dataset
+2. 5 famous figures (looks bad quality) https://www.kaggle.com/code/alkanerturan/speakerrecognition/input
